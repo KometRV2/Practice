@@ -25,36 +25,10 @@ public class Poi : MonoBehaviour
     [SerializeField]
     private float radius = 0.01f;
 
-    void Update()
-    {
-        // m_Hits = Physics.SphereCastAll(m_Kami.position, radius, m_Kami.up.normalized, dis, 1 << LayerMask.NameToLayer("Fish"));
-        // if(m_Hits.Length > 0)
-        // {
-        //     for(int i = 0, il = m_Hits.Length; i < il; i++)
-        //     {
-        //         if(obj3 == null)
-        //         {
-        //             obj3 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        //             obj3.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        //             obj3.transform.position = m_Hits[i].point;
-        //             obj3.name = "obj3";
-        //         }
-
-        //         Debug.LogError(m_Hits[i].point);
-        //         GoldFish fish = m_Hits[i].collider.GetComponent<GoldFish>();
-        //         fish.OnScoop();
-        //     }
-        // }
-
-        // Collider[] cols = Physics.OverlapSphere(m_Kami.position, radius, 1 << LayerMask.NameToLayer("Fish"));
-        // if(cols.Length > 0)
-        // {
-        //     Debug.LogError("うおおおお");
-        // }
-    }
-
     [SerializeField]
     private float dis = 0.01f;
+
+    private GoldFish m_GoldFish;
 
     void OnDrawGizmos()
     {
@@ -64,21 +38,24 @@ public class Poi : MonoBehaviour
         }
     }
 
-    // void OnCollisionEnter(Collision other)
-    // {
-    //     if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
-    //     {
-    //         GoldFish goldFish = other.gameObject.GetComponent<GoldFish>();
-    //         goldFish.OnScoop();
-    //     }
-    // }
+    void OnCollisionEnter(Collision other)
+    {
+        if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
+        {
+            m_GoldFish = other.gameObject.GetComponent<GoldFish>();
+            m_GoldFish.OnScoop();
+        }
+    }
 
-    // void OnCollisionExit(Collision other)
-    // {
-    //     if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
-    //     {
-    //         GoldFish goldFish = other.gameObject.GetComponent<GoldFish>();
-    //         goldFish.OnEndScoop();
-    //     }
-    // }
+    void OnCollisionStay(Collision other)
+    {
+        if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
+        {
+            GoldFish goldFish = other.gameObject.GetComponent<GoldFish>();
+            if(m_GoldFish == goldFish)
+            {
+                m_GoldFish.UpdateOnPoi();
+            }
+        }
+    }
 }

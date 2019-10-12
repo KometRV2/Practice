@@ -10,7 +10,6 @@ public class AquariumWater : MonoBehaviour
         {
             GoldFish fish = collider.gameObject.GetComponent<GoldFish>();
             fish.InWater();
-            Debug.LogError("in");
         }
     }
 
@@ -20,7 +19,6 @@ public class AquariumWater : MonoBehaviour
         {
             GoldFish fish = collider.gameObject.GetComponent<GoldFish>();
             fish.OutWater();
-            Debug.LogError("out");
         }
     }
 }

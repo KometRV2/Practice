@@ -29,7 +29,7 @@ public class GoldFish : MonoBehaviour
     private bool m_IsScooping;
 
     [SerializeField]
-    private Vector3 localGravity = Vector3.up * - 0.1f;
+    private Vector3 localGravity = Vector3.up * - 0.7f;
     public void Initialize()
     {
         m_State = FishState.IDLE;
@@ -102,6 +102,11 @@ public class GoldFish : MonoBehaviour
         return nextPos;
     }
 
+    public void OnScoop()
+    {
+        m_State = FishState.STRUGGLE;
+    }
+
     public void OutWater()
     {
         m_IsScooping = true;
@@ -109,6 +114,25 @@ public class GoldFish : MonoBehaviour
 
     public void InWater()
     {
+        m_State = FishState.IDLE;
         m_IsScooping = false;
+        m_RigidBody.velocity = Constants.VECTOR3_ZERO;
+        Vector3 rot = this.transform.localEulerAngles;
+        rot.x = 0f;
+        rot.z = 0f;
+        this.transform.localEulerAngles = rot;
+
+        Vector3 pos = this.transform.localPosition;
+        pos.y = 0.02f;
+        this.transform.localPosition = pos;
+    }
+
+    [SerializeField]
+    private float power = 0.001f;
+
+    public void UpdateOnPoi()
+    {
+        // m_RigidBody.AddForce(new Vector3(power * TimeManager.I.DeltaTime, 0f, 0f), ForceMode.Force);
+        // Debug.LogError("update");
     }
 }
