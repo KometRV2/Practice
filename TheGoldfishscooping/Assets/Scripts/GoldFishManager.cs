@@ -81,7 +81,7 @@ public class GoldFishManager : MonoBehaviour
     private void SetTransform(Transform fishTrans)
     {
         float rand = Random.value;
-        fishTrans.localPosition = new Vector3(0, 0.5f,0);//GetRandomPosInAquarium();
+        fishTrans.localPosition = new Vector3(0, 0.0085f,0);//GetRandomPosInAquarium();
         fishTrans.localRotation = (rand < 0.5f) ? Quaternion.Euler(0, -90, 0) : Quaternion.Euler(0, 90, 0);
     }
 

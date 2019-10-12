@@ -26,7 +26,10 @@ public class GoldFish : MonoBehaviour
     private Vector3 m_MoveDis;
     private Vector3 m_MoveDir;
     private Vector3 m_NextTargetPos;
+    private bool m_IsScooping;
 
+    [SerializeField]
+    private Vector3 localGravity = Vector3.up * - 0.1f;
     public void Initialize()
     {
         m_State = FishState.IDLE;
@@ -54,6 +57,19 @@ public class GoldFish : MonoBehaviour
             default:
             break;
         }
+    }
+
+    private void FixedUpdate () 
+    {
+        if(m_IsScooping)
+        {
+            SetLocalGravity ();
+        }
+    }
+
+    private void SetLocalGravity()
+　　{
+        m_RigidBody.AddForce (localGravity, ForceMode.Acceleration);
     }
 
     private void SetSwimInfo()
@@ -86,8 +102,13 @@ public class GoldFish : MonoBehaviour
         return nextPos;
     }
 
-    public void OnScoop()
+    public void OutWater()
     {
-        Debug.LogError(this.gameObject.name);
+        m_IsScooping = true;
+    }
+
+    public void InWater()
+    {
+        m_IsScooping = false;
     }
 }

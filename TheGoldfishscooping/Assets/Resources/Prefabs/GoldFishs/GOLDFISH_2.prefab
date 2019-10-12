@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3481231097436947236}
-  - component: {fileID: 1275948548005345425}
   - component: {fileID: 8467069658711231141}
+  - component: {fileID: -8053921485730488828}
   m_Layer: 8
   m_Name: GOLDFISH_2
   m_TagString: Untagged
@@ -33,7 +33,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &1275948548005345425
+--- !u!136 &8467069658711231141
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438125584922652983}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.02
+  m_Height: 0.07
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: -0.016}
+--- !u!54 &-8053921485730488828
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -48,21 +62,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!136 &8467069658711231141
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 438125584922652983}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.02
-  m_Height: 0.07
-  m_Direction: 2
-  m_Center: {x: 0, y: 0, z: -0.016}
+  m_CollisionDetection: 1
 --- !u!1 &7774397721305485490
 GameObject:
   m_ObjectHideFlags: 0
