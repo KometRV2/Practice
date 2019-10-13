@@ -116,7 +116,15 @@ public class GoldFish : MonoBehaviour
     {
         m_State = FishState.IDLE;
         m_IsScooping = false;
-        m_RigidBody.velocity = Constants.VECTOR3_ZERO;
+        //m_RigidBody.velocity = Constants.VECTOR3_ZERO;
+        StartCoroutine(StopRigid());
+    }
+
+    private IEnumerator StopRigid()
+    {
+        m_RigidBody.isKinematic = true;
+        yield return null;
+        m_RigidBody.isKinematic = false;
         Vector3 rot = this.transform.localEulerAngles;
         rot.x = 0f;
         rot.z = 0f;
