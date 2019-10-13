@@ -44,9 +44,9 @@ public class GoldFishManager : MonoBehaviour
     public void Initialize()
     {
         Dictionary<int, int> createFishCountDic = new Dictionary<int, int>();
-        createFishCountDic[0] = 5;
-        createFishCountDic[1] = 3;
-        createFishCountDic[2] = 2;
+        createFishCountDic[0] = 1;
+        // createFishCountDic[1] = 3;
+        // createFishCountDic[2] = 2;
 
         CreateFishParam createFishParam = new CreateFishParam()
         {
@@ -95,7 +95,7 @@ public class GoldFishManager : MonoBehaviour
     private void SetTransform(Transform fishTrans)
     {
         float rand = Random.value;
-        fishTrans.localPosition = /* new Vector3(0, 0.02f,-0.261f);//*/GetRandomPosInAquarium();
+        fishTrans.localPosition = new Vector3(0, 0.02f,-0.261f);//*/GetRandomPosInAquarium();
         fishTrans.localRotation = (rand < 0.5f) ? Quaternion.Euler(0, -90, 0) : Quaternion.Euler(0, 90, 0);
     }
 

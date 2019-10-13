@@ -43,19 +43,25 @@ public class GoldFish : MonoBehaviour
     private Transform m_GetFishRoot;
     private CapsuleCollider m_Collider;
     private System.Action m_OnEndUtuwaMoveAction;
-
+    private Transform m_Owner;
     public void Initialize()
     {
         m_State = FishState.IDLE;
         m_NextInterval = Random.Range(0, 3);
         m_RigidBody = GetComponent<Rigidbody>();
         m_Collider = GetComponent<CapsuleCollider>();
+        m_Owner = this.transform.parent;
     }
 
     public void SetParam(GoldFishManagerParam param)
     {
         m_GetFishRoot = param.GetFishRoot;
         m_OnEndUtuwaMoveAction = param.OnEndUtuwaMoveAction;
+    }
+
+    public void SetParentNormal()
+    {
+        this.transform.SetParent(m_Owner);
     }
 
     public void OnUpdate()
@@ -104,7 +110,6 @@ public class GoldFish : MonoBehaviour
         m_NextInterval = m_MoveDis.magnitude / m_MoveSpeed;
         if(!m_IsScooped){return;}
         this.transform.DOLocalMove(m_NextTargetPos, m_NextInterval).OnUpdate(() => 
-        //m_RigidBody.DOMove(m_NextTargetPos, m_NextInterval).OnUpdate(() => 
         {
             Quaternion rot = Quaternion.LookRotation(m_MoveDir);
             rot = Quaternion.Slerp(this.transform.rotation, rot, Time.deltaTime * RotateSpeed);
@@ -184,11 +189,12 @@ public class GoldFish : MonoBehaviour
     {
         m_Collider.enabled = false;
         m_State = FishState.TOUTUWA;
-        this.transform.DOLocalMoveY(this.transform.localPosition.y - 0.1f, 0.5f).OnComplete(() => 
+        this.transform.SetParent(m_GetFishRoot);
+        this.transform.DOLocalMoveY(/* this.transform.localPosition.y - */0.1f, 0.5f).OnComplete(() => 
         {
             StartCoroutine(StopRigid(() => 
             {
-                this.transform.SetParent(m_GetFishRoot);
+                
                 m_State = FishState.IDLE;
                 m_IsScooping = false;
                 m_IsScooped = true;

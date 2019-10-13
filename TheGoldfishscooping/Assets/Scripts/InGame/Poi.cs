@@ -6,43 +6,60 @@ public class PoiParam
 {
     public System.Action OnCheckScoopClearAction;
     public System.Action OnCheckScoopFailAction;
+    public System.Action<float> OnUpdatePoiMeterAction;
+    public System.Action OnBreakPoiAction;
 }
 
 public class Poi : MonoBehaviour
 {
     private Transform m_Kami;
+
     private RaycastHit[] m_Hits;
     private System.Action m_OnCheckScoopClearAction;
     private System.Action m_OnCheckScoopFailAction;
+    private System.Action m_OnBreakPoiAction;
+    private System.Action<float> m_OnUpdatePoiMeterAction;
 
-    private static readonly float SCOOP_CLEAR_HEIGHT = 0.16f;
-    private GameObject obj3;
+    private static readonly float POI_METER_HP = 100;
+    private static readonly float SCOOP_CLEAR_HEIGHT = 0.18f;
+    
+    [SerializeField]
+    private Transform m_ScoopFishRoot;
+
     [SerializeField]
     private float radius = 0.01f;
 
     [SerializeField]
     private float dis = 0.01f;
+    private float m_PoiKamiHP;
 
+    private Vector3 m_BeforPos;
+    private Vector3 m_CalcVec;
+    private Color m_KamiMatColor;
+    private Rigidbody m_Rigid;
+    private Material m_KamiMat;
     private List<GoldFish> m_ScoopGoldFishList = new List<GoldFish>();
+    private InGameManager m_Owner;
+
     public void Initialize()
     {
+        m_Owner = GetComponentInParent<InGameManager>();
         m_Kami = transform.Find("kami");
-        transform.SetParent(Camera.main.transform);
-        // var obj1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        // obj1.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        // obj1.transform.position = m_Kami.position;
-        // obj1.name = "obj1";
 
-        // var obj2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        // obj2.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        // obj2.transform.position = m_Kami.position + m_Kami.up * 0.01f;
-        // obj2.name = "obj2";
+        transform.SetParent(Camera.main.transform);
+        m_Rigid = GetComponent<Rigidbody>();
+        m_PoiKamiHP = POI_METER_HP;
+        MeshRenderer meshRenderer = m_Kami.GetComponent<MeshRenderer>();
+        m_KamiMat = meshRenderer.materials[0];
+        m_BeforPos = this.transform.position;
     }
 
     public void SetParam(PoiParam param)
     {
         m_OnCheckScoopClearAction = param.OnCheckScoopClearAction;
         m_OnCheckScoopFailAction = param.OnCheckScoopFailAction;
+        m_OnUpdatePoiMeterAction = param.OnUpdatePoiMeterAction;
+        m_OnBreakPoiAction = param.OnBreakPoiAction;
     }
 
     public void RotatePoi(float value)
@@ -88,21 +105,35 @@ public class Poi : MonoBehaviour
             {
                 m_ScoopGoldFishList.Add(goldFish);
             }
+            goldFish.transform.SetParent(m_ScoopFishRoot);
         }
     }
 
-    void OnCollisionStay(Collision other)
+    void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
+        if(!m_Owner.IsBreakPoi && other.gameObject.layer == LayerMask.NameToLayer("Water"))
         {
-            GoldFish goldFish = other.gameObject.GetComponent<GoldFish>();
-            if(m_ScoopGoldFishList.Contains(goldFish))
+            m_PoiKamiHP -= 0.1f;
+            if(m_PoiKamiHP <= 0f)
             {
-                goldFish.UpdateOnPoi();
-                CheckScoopClear(goldFish);
+                m_PoiKamiHP = 0f;
             }
         }
     }
+
+    // void OnCollisionStay(Collision other)
+    // {
+    //     if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
+    //     {
+    //         var goldFish = other.gameObject.GetComponent<GoldFish>();
+    //         goldFish.OnScoop();
+    //         if(!m_ScoopGoldFishList.Contains(goldFish))
+    //         {
+    //             m_ScoopGoldFishList.Add(goldFish);
+    //         }
+    //         goldFish.transform.SetParent(m_ScoopFishRoot);
+    //     }
+    // }
 
     void OnCollisionExit(Collision other)
     {
@@ -114,12 +145,47 @@ public class Poi : MonoBehaviour
                 m_ScoopGoldFishList.Remove(goldFish);
             }
             m_OnCheckScoopFailAction?.Invoke();
+            goldFish.SetParentNormal();
+        }
+    }
+
+    private void Update()
+    {
+        if(!m_Owner.IsBreakPoi)
+        {
+            m_CalcVec = this.transform.position - m_BeforPos;
+            m_BeforPos = this.transform.position;
+            for(int i = 0, il = m_ScoopGoldFishList.Count; i < il; i++)
+            {
+                CheckScoopClear(m_ScoopGoldFishList[i]);
+            }
+            m_OnUpdatePoiMeterAction?.Invoke(m_PoiKamiHP / POI_METER_HP);
+            m_KamiMatColor = m_KamiMat.color;
+            m_KamiMatColor.a = m_PoiKamiHP / POI_METER_HP;
+            m_KamiMat.color = m_KamiMatColor;
+
+            if(m_PoiKamiHP <= 0f)
+            {
+                for(int i = 0, il = m_ScoopGoldFishList.Count; i < il; i++)
+                {
+                    m_ScoopGoldFishList[i].SetParentNormal();
+                }
+
+                m_PoiKamiHP = 0f;
+                m_OnBreakPoiAction?.Invoke();
+                m_Owner.OnBreakPoi();
+                Collider[] childCols = GetComponentsInChildren<Collider>(true);
+                for(int i = 0, il = childCols.Length; i < il; i++)
+                {
+                    childCols[i].enabled = false;
+                }                
+            }
         }
     }
 
     private void CheckScoopClear(GoldFish goldFish)
     {
-        if(goldFish.transform.localPosition.y > SCOOP_CLEAR_HEIGHT)
+        if(goldFish.transform.position.y > SCOOP_CLEAR_HEIGHT)
         {
             m_OnCheckScoopClearAction?.Invoke();
         }

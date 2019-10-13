@@ -9,6 +9,14 @@ public class InGameManager : MonoBehaviour
     private GoldFishManager m_GoldFishManager;
     private Poi m_Poi;
     private Utuwa m_Utuwa;
+    private bool m_IsBreakPoi;
+    public bool IsBreakPoi
+    {
+        get
+        {
+            return m_IsBreakPoi;
+        }
+    }
 
     private T GetUIClass<T>(string path)
     {
@@ -23,6 +31,11 @@ public class InGameManager : MonoBehaviour
             Debug.LogError(getUIClass + "がアタッチさせていません");
         }
 		return getUIClass;
+    }
+
+    public void OnBreakPoi()
+    {
+        m_IsBreakPoi = true;
     }
 
     void Start()
@@ -49,6 +62,7 @@ public class InGameManager : MonoBehaviour
         {
             OnCheckScoopClearAction = m_UIInGameMain.ChangeScoopImageClear,
             OnCheckScoopFailAction = m_UIInGameMain.ChangeScoopImageFail,
+            OnUpdatePoiMeterAction = m_UIInGameMain.UpdatePoiMeter
         };
         m_Poi.SetParam(poiParam);
 

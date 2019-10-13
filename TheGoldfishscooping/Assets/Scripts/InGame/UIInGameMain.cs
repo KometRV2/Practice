@@ -15,12 +15,16 @@ public class UIInGameMain : MonoBehaviour
     private Slider m_PoiSlider;
 
     [SerializeField]
+    private Image m_PoiMeter;
+
+    [SerializeField]
     private Button m_UtuwaButton;
 
     private Image m_UtuwaButtonImage;
     private System.Action<float> m_OnSliderAction;
     private System.Action m_OnUtuwaAction;
     private bool m_IsWait;
+    private Vector3 m_MeterScale;
 
     public void Initialize()
     {
@@ -70,5 +74,12 @@ public class UIInGameMain : MonoBehaviour
         color.a = 0.5f;
         m_UtuwaButtonImage.color = color;
         m_UtuwaButton.enabled = false;
+    }
+
+    public void UpdatePoiMeter(float value)
+    {
+        m_MeterScale = m_PoiMeter.transform.localScale;
+        m_MeterScale.x = value;
+        m_PoiMeter.transform.localScale = m_MeterScale;
     }
 }
