@@ -13,8 +13,8 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField]
     private AudioSource m_SeAudioSource;
 
-    [SerializeField]
-    private AudioSource m_SeGloveCatchAudioSource;
+    // [SerializeField]
+    // private AudioSource m_SeGloveCatchAudioSource;
 
     private AudioClip[] m_SEClip;
     private AudioClip[] m_BgmClip;
@@ -36,7 +36,7 @@ public class SoundManager : Singleton<SoundManager>
     public enum BGM
     {
         NONE = -1,
-        NERAIUCHI = 0,
+        NATSUMATSURI = 0,
     }
 
     public override void OnAwake()
@@ -44,7 +44,7 @@ public class SoundManager : Singleton<SoundManager>
         m_SEClip = Resources.LoadAll<AudioClip>(SE_PATH);
         m_BgmClip = Resources.LoadAll<AudioClip>(BGM_PATH);
         m_BaseSeVolume = m_SeAudioSource.volume;
-        PlayBgm(SoundManager.BGM.NERAIUCHI);
+        PlayBgm(SoundManager.BGM.NATSUMATSURI);
     }
 
     public void PlayButtonSE()
@@ -65,17 +65,17 @@ public class SoundManager : Singleton<SoundManager>
         PlaySE(playSE);
     }
 
-    private void PlayGloveCatchSE(SE playSE)
-    {
-        AudioClip playClip = GetSeAudioClip(playSE);
-        m_SeGloveCatchAudioSource.PlayOneShot(playClip);
-    }
+    // private void PlayGloveCatchSE(SE playSE)
+    // {
+    //     AudioClip playClip = GetSeAudioClip(playSE);
+    //     m_SeGloveCatchAudioSource.PlayOneShot(playClip);
+    // }
 
-    public void PlayGloveCatchSE(SE playSE, float volume = 1.0f)
-    {
-        m_SeGloveCatchAudioSource.volume = volume * m_BaseSeVolume;
-        PlayGloveCatchSE(playSE);
-    }
+    // public void PlayGloveCatchSE(SE playSE, float volume = 1.0f)
+    // {
+    //     m_SeGloveCatchAudioSource.volume = volume * m_BaseSeVolume;
+    //     PlayGloveCatchSE(playSE);
+    // }
 
     private AudioClip GetSeAudioClip(SE playSE)
     {

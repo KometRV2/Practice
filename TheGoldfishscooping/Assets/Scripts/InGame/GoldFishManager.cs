@@ -7,6 +7,12 @@ public class CreateFishParam
     public Dictionary<int, int> CreateFishCountDic;
 }
 
+public class GoldFishManagerParam
+{
+    public Transform GetFishRoot;
+    public System.Action OnEndUtuwaMoveAction;
+}
+
 public class GoldFishManager : MonoBehaviour
 {
     public enum FISH_TYPE
@@ -35,18 +41,26 @@ public class GoldFishManager : MonoBehaviour
             Random.Range(AQUARIUM_RANGE_Z[0], AQUARIUM_RANGE_Z[1]));
     }
 
-    void Start()
+    public void Initialize()
     {
         Dictionary<int, int> createFishCountDic = new Dictionary<int, int>();
-        createFishCountDic[0] = 1;
-        // createFishCountDic[1] = 3;
-        // createFishCountDic[2] = 2;
+        createFishCountDic[0] = 5;
+        createFishCountDic[1] = 3;
+        createFishCountDic[2] = 2;
 
         CreateFishParam createFishParam = new CreateFishParam()
         {
             CreateFishCountDic = createFishCountDic
         };
         OnStart(createFishParam);
+    }
+
+    public void SetParam(GoldFishManagerParam param)
+    {
+        for(int i = 0, il = m_GoldFishList.Count; i < il; i++)
+        {
+            m_GoldFishList[i].SetParam(param);
+        }
     }
 
     public void OnStart(CreateFishParam createFishCountDic)
@@ -81,7 +95,7 @@ public class GoldFishManager : MonoBehaviour
     private void SetTransform(Transform fishTrans)
     {
         float rand = Random.value;
-        fishTrans.localPosition = new Vector3(0, 0.0085f,0);//GetRandomPosInAquarium();
+        fishTrans.localPosition = /* new Vector3(0, 0.02f,-0.261f);//*/GetRandomPosInAquarium();
         fishTrans.localRotation = (rand < 0.5f) ? Quaternion.Euler(0, -90, 0) : Quaternion.Euler(0, 90, 0);
     }
 
@@ -89,7 +103,7 @@ public class GoldFishManager : MonoBehaviour
     {
         for(int i = 0, il = m_GoldFishList.Count; i < il; i++)
         {
-            //m_GoldFishList[i].OnUpdate();
+            m_GoldFishList[i].OnUpdate();
         }
     }
 }

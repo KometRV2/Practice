@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class UIInGameMainParam
 {
-    public System.Action OnUtuwaAction;
+    public System.Action<float> SliderAction;
+    public System.Action UtuwaAction;
 }
 
 public class UIInGameMain : MonoBehaviour
@@ -21,9 +22,8 @@ public class UIInGameMain : MonoBehaviour
     private System.Action m_OnUtuwaAction;
     private bool m_IsWait;
 
-    public void Initialize(UIInGameMainParam param)
+    public void Initialize()
     {
-        m_OnUtuwaAction = param.OnUtuwaAction;
         m_PoiSlider.onValueChanged.AddListener(OnSliderAction);
         m_UtuwaButton.onClick.AddListener(OnClickUtuwaButton);
 
@@ -31,9 +31,10 @@ public class UIInGameMain : MonoBehaviour
         ChangeScoopImageFail();
     }
 
-    public void SetSliderAction(System.Action<float> sliderAction)
+    public void SetParam(UIInGameMainParam param)
     {
-        m_OnSliderAction = sliderAction;
+        m_OnUtuwaAction = param.UtuwaAction;
+        m_OnSliderAction = param.SliderAction;
     }
 
     private void OnSliderAction(float value)
@@ -59,6 +60,7 @@ public class UIInGameMain : MonoBehaviour
             Color color = m_UtuwaButtonImage.color;
             color.a = 1.0f;
             m_UtuwaButtonImage.color = color;
+            m_UtuwaButton.enabled = true;
         } 
     }
 
@@ -67,5 +69,6 @@ public class UIInGameMain : MonoBehaviour
         Color color = m_UtuwaButtonImage.color;
         color.a = 0.5f;
         m_UtuwaButtonImage.color = color;
+        m_UtuwaButton.enabled = false;
     }
 }

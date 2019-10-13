@@ -4,6 +4,11 @@ using UnityEngine;
 using DG;
 using DG.Tweening;
 
+public class GoldFishParam
+{
+    public System.Action OnEndUtuwaMoveAction;
+}
+
 public class GoldFish : MonoBehaviour
 {
     public enum FishState
@@ -12,10 +17,13 @@ public class GoldFish : MonoBehaviour
         IDLE,
         SWIMMING,
         STRUGGLE,
+        TOUTUWA,
+        INUTUWA,
     }
 
     [SerializeField]
     private float RotateSpeed = 10f;
+
     private float m_Timer;
     private float m_NextInterval;
     private float m_MoveSpeed;
@@ -27,14 +35,27 @@ public class GoldFish : MonoBehaviour
     private Vector3 m_MoveDir;
     private Vector3 m_NextTargetPos;
     private bool m_IsScooping;
+    private bool m_IsScooped;
 
     [SerializeField]
     private Vector3 localGravity = Vector3.up * - 0.7f;
+
+    private Transform m_GetFishRoot;
+    private CapsuleCollider m_Collider;
+    private System.Action m_OnEndUtuwaMoveAction;
+
     public void Initialize()
     {
         m_State = FishState.IDLE;
         m_NextInterval = Random.Range(0, 3);
         m_RigidBody = GetComponent<Rigidbody>();
+        m_Collider = GetComponent<CapsuleCollider>();
+    }
+
+    public void SetParam(GoldFishManagerParam param)
+    {
+        m_GetFishRoot = param.GetFishRoot;
+        m_OnEndUtuwaMoveAction = param.OnEndUtuwaMoveAction;
     }
 
     public void OnUpdate()
@@ -53,6 +74,10 @@ public class GoldFish : MonoBehaviour
             case FishState.SWIMMING:
             break;
             case FishState.STRUGGLE:
+            break;
+            case FishState.TOUTUWA:
+            break;
+            case FishState.INUTUWA:
             break;
             default:
             break;
@@ -74,10 +99,12 @@ public class GoldFish : MonoBehaviour
 
     private void SetSwimInfo()
     {
-        m_NextTargetPos = GetNextPos();
+        m_NextTargetPos = m_IsScooped ? GetUtuwaMovePos() : GetNextPos();
         m_MoveSpeed = Random.Range(0.03f, 0.06f);
         m_NextInterval = m_MoveDis.magnitude / m_MoveSpeed;
-        m_RigidBody.DOMove(m_NextTargetPos, m_NextInterval).OnUpdate(() => 
+        if(!m_IsScooped){return;}
+        this.transform.DOLocalMove(m_NextTargetPos, m_NextInterval).OnUpdate(() => 
+        //m_RigidBody.DOMove(m_NextTargetPos, m_NextInterval).OnUpdate(() => 
         {
             Quaternion rot = Quaternion.LookRotation(m_MoveDir);
             rot = Quaternion.Slerp(this.transform.rotation, rot, Time.deltaTime * RotateSpeed);
@@ -102,6 +129,14 @@ public class GoldFish : MonoBehaviour
         return nextPos;
     }
 
+    private Vector3 GetUtuwaMovePos()
+    {
+        Vector2 randPos = Random.insideUnitCircle * 0.15f;
+        Vector3 newPos = new Vector3(randPos.x, 0.04f, randPos.y);
+        m_MoveDir = m_GetFishRoot.transform.position + newPos - this.transform.position;
+        return newPos;
+    }
+
     public void OnScoop()
     {
         m_State = FishState.STRUGGLE;
@@ -116,11 +151,15 @@ public class GoldFish : MonoBehaviour
     {
         m_State = FishState.IDLE;
         m_IsScooping = false;
-        //m_RigidBody.velocity = Constants.VECTOR3_ZERO;
-        StartCoroutine(StopRigid());
+        StartCoroutine(StopRigid(() => 
+        {
+            Vector3 pos = this.transform.localPosition;
+            pos.y = 0.02f;
+            this.transform.localPosition = pos;
+        }));
     }
 
-    private IEnumerator StopRigid()
+    private IEnumerator StopRigid(System.Action onComlpete = null)
     {
         m_RigidBody.isKinematic = true;
         yield return null;
@@ -129,10 +168,7 @@ public class GoldFish : MonoBehaviour
         rot.x = 0f;
         rot.z = 0f;
         this.transform.localEulerAngles = rot;
-
-        Vector3 pos = this.transform.localPosition;
-        pos.y = 0.02f;
-        this.transform.localPosition = pos;
+        onComlpete?.Invoke();
     }
 
     [SerializeField]
@@ -142,5 +178,23 @@ public class GoldFish : MonoBehaviour
     {
         // m_RigidBody.AddForce(new Vector3(power * TimeManager.I.DeltaTime, 0f, 0f), ForceMode.Force);
         // Debug.LogError("update");
+    }
+
+    public void ToUtuwa()
+    {
+        m_Collider.enabled = false;
+        m_State = FishState.TOUTUWA;
+        this.transform.DOLocalMoveY(this.transform.localPosition.y - 0.1f, 0.5f).OnComplete(() => 
+        {
+            StartCoroutine(StopRigid(() => 
+            {
+                this.transform.SetParent(m_GetFishRoot);
+                m_State = FishState.IDLE;
+                m_IsScooping = false;
+                m_IsScooped = true;
+                m_Timer = 0f;
+                m_OnEndUtuwaMoveAction?.Invoke();
+            }));
+        });
     }
 }
