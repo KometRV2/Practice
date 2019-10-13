@@ -18,6 +18,12 @@ public class InGameManager : MonoBehaviour
         }
     }
 
+    private System.Action m_FailAction;
+    public void RegisterFailAction(System.Action action)
+    {
+        m_FailAction += action;
+    }
+
     private T GetUIClass<T>(string path)
     {
         Transform targetUITrans = m_InGameUIStacker.Find(path);
@@ -31,11 +37,6 @@ public class InGameManager : MonoBehaviour
             Debug.LogError(getUIClass + "がアタッチさせていません");
         }
 		return getUIClass;
-    }
-
-    public void OnBreakPoi()
-    {
-        m_IsBreakPoi = true;
     }
 
     void Start()
@@ -62,7 +63,8 @@ public class InGameManager : MonoBehaviour
         {
             OnCheckScoopClearAction = m_UIInGameMain.ChangeScoopImageClear,
             OnCheckScoopFailAction = m_UIInGameMain.ChangeScoopImageFail,
-            OnUpdatePoiMeterAction = m_UIInGameMain.UpdatePoiMeter
+            OnUpdatePoiMeterAction = m_UIInGameMain.UpdatePoiMeter,
+            OnBreakPoiAction = OnFailAction
         };
         m_Poi.SetParam(poiParam);
 
@@ -85,8 +87,13 @@ public class InGameManager : MonoBehaviour
         m_UIInGameMain.SetParam(inGameMainParam);
     }
 
-    void Update()
+    private void OnFailAction()
     {
-        
+        m_IsBreakPoi = true;
+        UIManager.I.CreateYesNoDialog("テキスト", () => 
+        {
+            m_IsBreakPoi = false;
+            m_FailAction?.Invoke();
+        }, null);
     }
 }

@@ -52,6 +52,7 @@ public class Poi : MonoBehaviour
         MeshRenderer meshRenderer = m_Kami.GetComponent<MeshRenderer>();
         m_KamiMat = meshRenderer.materials[0];
         m_BeforPos = this.transform.position;
+        m_Owner.RegisterFailAction(RetryAction);
     }
 
     public void SetParam(PoiParam param)
@@ -60,6 +61,16 @@ public class Poi : MonoBehaviour
         m_OnCheckScoopFailAction = param.OnCheckScoopFailAction;
         m_OnUpdatePoiMeterAction = param.OnUpdatePoiMeterAction;
         m_OnBreakPoiAction = param.OnBreakPoiAction;
+    }
+
+    private void RetryAction()
+    {
+        m_PoiKamiHP = POI_METER_HP;
+        Collider[] childCols = GetComponentsInChildren<Collider>(true);
+        for(int i = 0, il = childCols.Length; i < il; i++)
+        {
+            childCols[i].enabled = true;
+        } 
     }
 
     public void RotatePoi(float value)
@@ -106,6 +117,13 @@ public class Poi : MonoBehaviour
                 m_ScoopGoldFishList.Add(goldFish);
             }
             goldFish.transform.SetParent(m_ScoopFishRoot);
+
+            //上から触れた場合は即アウト
+            float dirY = m_Kami.position.y - other.transform.position.y;
+            if(dirY >= 0f)
+            {
+                m_PoiKamiHP = 0f;
+            }
         }
     }
 
@@ -120,20 +138,6 @@ public class Poi : MonoBehaviour
             }
         }
     }
-
-    // void OnCollisionStay(Collision other)
-    // {
-    //     if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
-    //     {
-    //         var goldFish = other.gameObject.GetComponent<GoldFish>();
-    //         goldFish.OnScoop();
-    //         if(!m_ScoopGoldFishList.Contains(goldFish))
-    //         {
-    //             m_ScoopGoldFishList.Add(goldFish);
-    //         }
-    //         goldFish.transform.SetParent(m_ScoopFishRoot);
-    //     }
-    // }
 
     void OnCollisionExit(Collision other)
     {
@@ -173,7 +177,6 @@ public class Poi : MonoBehaviour
 
                 m_PoiKamiHP = 0f;
                 m_OnBreakPoiAction?.Invoke();
-                m_Owner.OnBreakPoi();
                 Collider[] childCols = GetComponentsInChildren<Collider>(true);
                 for(int i = 0, il = childCols.Length; i < il; i++)
                 {

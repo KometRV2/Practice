@@ -50,7 +50,7 @@ public class SoundManager : Singleton<SoundManager>
     public void PlayButtonSE()
     {
         m_SeAudioSource.volume = m_BaseSeVolume * 0.2f;
-        PlaySE(SE.THROW_END);
+        PlaySE(SE.BUTTON_YES);
     }
 
     private void PlaySE(SE playSE)
