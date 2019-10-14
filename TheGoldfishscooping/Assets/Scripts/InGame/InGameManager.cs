@@ -117,7 +117,7 @@ public class InGameManager : MonoBehaviour
             SoundManager.I.PlayButtonSE();
         }, () => 
         {
-            SceneControlManager.I.LoadScene("Main");
+            SceneControlManager.I.LoadScene("Title");
             SoundManager.I.PlayButtonSE();
         });
     }
