@@ -11,7 +11,7 @@ public class UIManager : Singleton<UIManager>
 
     public void CreateYesNoDialog(string text, System.Action OnOKAction, System.Action OnNoAction)
     {
-        TimeManager.I.SetTimeScale(0f);
+        //TimeManager.I.SetTimeScale(0f);
         UIDialog uiDialog = ResourceManager.CreateUI<UIDialog>("UIDialog", m_Stacker.transform);
         uiDialog.Initialize(text, OnOKAction, OnNoAction);
     }

@@ -40,6 +40,7 @@ public class Poi : MonoBehaviour
     private Material m_KamiMat;
     private List<GoldFish> m_ScoopGoldFishList = new List<GoldFish>();
     private InGameManager m_Owner;
+    private bool m_IsIgnoreMinusHP;
 
     public void Initialize()
     {
@@ -63,9 +64,15 @@ public class Poi : MonoBehaviour
         m_OnBreakPoiAction = param.OnBreakPoiAction;
     }
 
+    public void SetIgnoreMinusHP(bool enable)
+    {
+        m_IsIgnoreMinusHP = enable;
+    }
+
     private void RetryAction()
     {
         m_PoiKamiHP = POI_METER_HP;
+        SetIgnoreMinusHP(false);
         Collider[] childCols = GetComponentsInChildren<Collider>(true);
         for(int i = 0, il = childCols.Length; i < il; i++)
         {
@@ -98,11 +105,17 @@ public class Poi : MonoBehaviour
         this.transform.localEulerAngles = localAngle;
     }
 
-    void OnDrawGizmos()
+    private void MinusHP(float value)
     {
-        if(m_Kami != null)
+        if(m_IsIgnoreMinusHP)
         {
-            Gizmos.DrawRay (m_Kami.position, m_Kami.up * dis);
+            return;
+        }
+
+        m_PoiKamiHP -= value;
+        if(m_PoiKamiHP <= 0f)
+        {
+            m_PoiKamiHP = 0f;
         }
     }
 
@@ -122,20 +135,28 @@ public class Poi : MonoBehaviour
             float dirY = m_Kami.position.y - other.transform.position.y;
             if(dirY >= 0f)
             {
-                m_PoiKamiHP = 0f;
+                MinusHP(100f);
             }
         }
     }
 
     void OnTriggerStay(Collider other)
     {
-        if(!m_Owner.IsBreakPoi && other.gameObject.layer == LayerMask.NameToLayer("Water"))
+        if(!m_Owner.IsBreakPoi)
         {
-            m_PoiKamiHP -= 0.1f;
-            if(m_PoiKamiHP <= 0f)
+            if(other.gameObject.layer == LayerMask.NameToLayer("Water"))
             {
-                m_PoiKamiHP = 0f;
+                MinusHP(0.1f);
             }
+        }
+    }
+
+    void OnCollisionStay(Collision other)
+    {
+        if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
+        {
+            GoldFish goldFish = other.gameObject.GetComponent<GoldFish>();
+            MinusHP(goldFish.Damage);
         }
     }
 
@@ -173,6 +194,7 @@ public class Poi : MonoBehaviour
                 for(int i = 0, il = m_ScoopGoldFishList.Count; i < il; i++)
                 {
                     m_ScoopGoldFishList[i].SetParentNormal();
+                    m_ScoopGoldFishList[i].MoveToWaterByFail();
                 }
 
                 m_PoiKamiHP = 0f;

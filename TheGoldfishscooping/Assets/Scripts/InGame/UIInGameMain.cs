@@ -7,6 +7,7 @@ public class UIInGameMainParam
 {
     public System.Action<float> SliderAction;
     public System.Action UtuwaAction;
+    public int FishCount;
 }
 
 public class UIInGameMain : MonoBehaviour
@@ -20,6 +21,12 @@ public class UIInGameMain : MonoBehaviour
     [SerializeField]
     private Button m_UtuwaButton;
 
+    [SerializeField]
+    private Text m_LimitFishCountText;
+
+    [SerializeField]
+    private GameObject m_ResultRoot;
+
     private Image m_UtuwaButtonImage;
     private System.Action<float> m_OnSliderAction;
     private System.Action m_OnUtuwaAction;
@@ -30,8 +37,8 @@ public class UIInGameMain : MonoBehaviour
     {
         m_PoiSlider.onValueChanged.AddListener(OnSliderAction);
         m_UtuwaButton.onClick.AddListener(OnClickUtuwaButton);
-
         m_UtuwaButtonImage = m_UtuwaButton.image;
+        m_ResultRoot.SetActive(false);
         ChangeScoopImageFail();
     }
 
@@ -39,6 +46,7 @@ public class UIInGameMain : MonoBehaviour
     {
         m_OnUtuwaAction = param.UtuwaAction;
         m_OnSliderAction = param.SliderAction;
+        UpdateLimitFishCount(param.FishCount);
     }
 
     private void OnSliderAction(float value)
@@ -81,5 +89,15 @@ public class UIInGameMain : MonoBehaviour
         m_MeterScale = m_PoiMeter.transform.localScale;
         m_MeterScale.x = value;
         m_PoiMeter.transform.localScale = m_MeterScale;
+    }
+
+    public void UpdateLimitFishCount(int limitFishCount)
+    {
+        m_LimitFishCountText.text = limitFishCount.ToString();
+    }
+
+    public void OnClearResult()
+    {
+        m_ResultRoot.SetActive(true);
     }
 }

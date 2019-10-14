@@ -27,6 +27,15 @@ public class GoldFish : MonoBehaviour
     private float m_Timer;
     private float m_NextInterval;
     private float m_MoveSpeed;
+    private float m_Damage;
+    public float Damage
+    {
+        get
+        {
+            return m_Damage;
+        }
+    }
+    
 
     private FishState m_State = FishState.NONE;
     private Rigidbody m_RigidBody;
@@ -44,13 +53,14 @@ public class GoldFish : MonoBehaviour
     private CapsuleCollider m_Collider;
     private System.Action m_OnEndUtuwaMoveAction;
     private Transform m_Owner;
-    public void Initialize()
+    public void Initialize(int fishType)
     {
         m_State = FishState.IDLE;
         m_NextInterval = Random.Range(0, 3);
         m_RigidBody = GetComponent<Rigidbody>();
         m_Collider = GetComponent<CapsuleCollider>();
         m_Owner = this.transform.parent;
+        m_Damage = GoldFishManager.DAMAGE_FROM_TYPE[fishType];
     }
 
     public void SetParam(GoldFishManagerParam param)
@@ -62,6 +72,11 @@ public class GoldFish : MonoBehaviour
     public void SetParentNormal()
     {
         this.transform.SetParent(m_Owner);
+    }
+
+    public void MoveToWaterByFail()
+    {
+        this.transform.DOLocalMoveY(0.03f, 0.6f);
     }
 
     public void OnUpdate()
@@ -190,11 +205,10 @@ public class GoldFish : MonoBehaviour
         m_Collider.enabled = false;
         m_State = FishState.TOUTUWA;
         this.transform.SetParent(m_GetFishRoot);
-        this.transform.DOLocalMoveY(/* this.transform.localPosition.y - */0.1f, 0.5f).OnComplete(() => 
+        this.transform.DOLocalMoveY(0.1f, 0.5f).OnComplete(() => 
         {
             StartCoroutine(StopRigid(() => 
             {
-                
                 m_State = FishState.IDLE;
                 m_IsScooping = false;
                 m_IsScooped = true;

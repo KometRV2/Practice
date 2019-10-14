@@ -55,7 +55,16 @@ public class InGameManager : MonoBehaviour
         GoldFishManagerParam goldFishManagerParam = new GoldFishManagerParam()
         {
             GetFishRoot = m_Utuwa.GetFishRoot,
-            OnEndUtuwaMoveAction = m_Utuwa.EndScoop,
+            OnEndUtuwaMoveAction = () => 
+            {
+                m_Utuwa.EndScoop();
+                m_GoldFishManager.GetFish();
+                m_UIInGameMain.UpdateLimitFishCount(m_GoldFishManager.RemainFishCount);
+                if(m_GoldFishManager.RemainFishCount == 0)
+                {
+                    m_UIInGameMain.OnClearResult();
+                }
+            },
         };
         m_GoldFishManager.SetParam(goldFishManagerParam);
 
@@ -81,8 +90,13 @@ public class InGameManager : MonoBehaviour
 
         UIInGameMainParam inGameMainParam = new UIInGameMainParam()
         {
-            UtuwaAction = m_Utuwa.SetUtuwaPosition,
+            UtuwaAction = () => 
+            {
+                m_Utuwa.SetUtuwaPosition();
+                m_Poi.SetIgnoreMinusHP(true);
+            },
             SliderAction = m_Poi.RotatePoi,
+            FishCount = m_GoldFishManager.CreateFishCount
         };
         m_UIInGameMain.SetParam(inGameMainParam);
     }
@@ -90,7 +104,7 @@ public class InGameManager : MonoBehaviour
     private void OnFailAction()
     {
         m_IsBreakPoi = true;
-        UIManager.I.CreateYesNoDialog("テキスト", () => 
+        UIManager.I.CreateYesNoDialog("やぶれた！\nやりなおしますか？", () => 
         {
             m_IsBreakPoi = false;
             m_FailAction?.Invoke();
