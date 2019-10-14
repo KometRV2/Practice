@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using DG;
 using DG.Tweening;
 
@@ -123,7 +124,7 @@ public class GoldFish : MonoBehaviour
         m_NextTargetPos = m_IsScooped ? GetUtuwaMovePos() : GetNextPos();
         m_MoveSpeed = Random.Range(0.03f, 0.06f);
         m_NextInterval = m_MoveDis.magnitude / m_MoveSpeed;
-        if(!m_IsScooped){return;}
+        //if(!m_IsScooped){return;}
         this.transform.DOLocalMove(m_NextTargetPos, m_NextInterval).OnUpdate(() => 
         {
             Quaternion rot = Quaternion.LookRotation(m_MoveDir);
@@ -164,11 +165,20 @@ public class GoldFish : MonoBehaviour
 
     public void OutWater()
     {
+        if(!SceneControlManager.CheckSceneName("Main"))
+        {
+            return;
+        }
         m_IsScooping = true;
     }
 
     public void InWater()
     {
+        if(!SceneControlManager.CheckSceneName("Main"))
+        {
+            return;
+        }
+
         m_State = FishState.IDLE;
         m_IsScooping = false;
         StartCoroutine(StopRigid(() => 

@@ -14,19 +14,28 @@ public class SceneControlManager : Singleton<SceneControlManager>
         LOADING = 2,
     }
 
-    [SerializeField]
     private Image m_Fader;
 
-    [SerializeField]
     private GameObject m_LoadContents;
 
-    [SerializeField]
     private Slider m_LoadSlider;
 
     private AsyncOperation m_Async;
     private State m_State = State.NONE;
     private Color m_FadeColor;
     private string m_LoadSceneName;
+
+    public static bool CheckSceneName(string sceneName)
+    {
+        return string.Equals(SceneManager.GetActiveScene().name, sceneName);
+    }
+
+    public override void OnAwake()
+    {
+        m_Fader = this.transform.Find("Canvas/Fader").GetComponent<Image>();
+        m_LoadContents = this.transform.Find("Canvas/NowLoadingContents").gameObject;
+        m_LoadSlider = m_LoadContents.transform.Find("Slider").GetComponent<Slider>();
+    }
 
     private void Update()
     {

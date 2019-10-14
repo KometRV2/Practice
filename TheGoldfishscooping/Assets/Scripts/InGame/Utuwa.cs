@@ -50,7 +50,7 @@ public class Utuwa : MonoBehaviour
         m_OnCompleteScoopAction = param.OnCompleteScoopAction;
     }
 
-    void Update()
+    public void OnUpdate()
     {
         if(m_IsScooping)
         {
@@ -65,16 +65,6 @@ public class Utuwa : MonoBehaviour
             this.transform.position = m_Position;
         }
     }
-
-    // public void OnUpdate()
-    // {
-    //     m_Position = this.transform.localPosition;
-    //     if(m_Position.y < INIT_POS.y)
-    //     {
-    //         m_Position.y = INIT_POS.y;
-    //         this.transform.localPosition = m_Position;
-    //     }
-    // }
 
     public void SetUtuwaPosition()
     {

@@ -101,6 +101,12 @@ public class InGameManager : MonoBehaviour
         m_UIInGameMain.SetParam(inGameMainParam);
     }
 
+    private void Update()
+    {
+        m_Poi.OnUpdate();
+        m_Utuwa.OnUpdate();
+    }
+
     private void OnFailAction()
     {
         m_IsBreakPoi = true;
@@ -108,6 +114,11 @@ public class InGameManager : MonoBehaviour
         {
             m_IsBreakPoi = false;
             m_FailAction?.Invoke();
-        }, null);
+            SoundManager.I.PlayButtonSE();
+        }, () => 
+        {
+            SceneControlManager.I.LoadScene("Main");
+            SoundManager.I.PlayButtonSE();
+        });
     }
 }

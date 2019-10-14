@@ -121,6 +121,10 @@ public class Poi : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        if(!SceneControlManager.CheckSceneName("Main"))
+        {
+            return;
+        }
         if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
         {
             var goldFish = other.gameObject.GetComponent<GoldFish>();
@@ -142,6 +146,10 @@ public class Poi : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
+        if(!SceneControlManager.CheckSceneName("Main"))
+        {
+            return;
+        }
         if(!m_Owner.IsBreakPoi)
         {
             if(other.gameObject.layer == LayerMask.NameToLayer("Water"))
@@ -153,6 +161,10 @@ public class Poi : MonoBehaviour
 
     void OnCollisionStay(Collision other)
     {
+        if(!SceneControlManager.CheckSceneName("Main"))
+        {
+            return;
+        }
         if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
         {
             GoldFish goldFish = other.gameObject.GetComponent<GoldFish>();
@@ -162,6 +174,10 @@ public class Poi : MonoBehaviour
 
     void OnCollisionExit(Collision other)
     {
+        if(!SceneControlManager.CheckSceneName("Main"))
+        {
+            return;
+        }
         if(other.gameObject.layer == LayerMask.NameToLayer("Fish"))
         {
             var goldFish = other.gameObject.GetComponent<GoldFish>();
@@ -174,7 +190,7 @@ public class Poi : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void OnUpdate()
     {
         if(!m_Owner.IsBreakPoi)
         {
