@@ -140,20 +140,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 449217040280329711}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c13ddd378fc94e1c855e91bbcfb4c6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ca1c310a23ed4f639b928ed06134fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DebugActionButton1: {fileID: 7827699164882279434}
-  m_DebugActionButton2: {fileID: 4101343670728754671}
-  m_DebugActionButton3: {fileID: 3751594820383967151}
-  m_DebugActionButton4: {fileID: 1934204993307583973}
-  m_DebugActionButton5: {fileID: 4215244386781220808}
-  m_DebugActionButton6: {fileID: 6170336360060225563}
-  m_DebugActionButton7: {fileID: 5197553773311447982}
-  m_DebugActionButton8: {fileID: 3379444430543426332}
-  m_DebugActionButton9: {fileID: 5879491527885972297}
-  m_InputField: {fileID: 7632467316551591827}
-  m_InputFieldButton: {fileID: 6820044015770790472}
+  m_DebugActionButton1: {fileID: 0}
+  m_DebugActionButton2: {fileID: 0}
+  m_DebugActionButton3: {fileID: 0}
+  m_DebugActionButton4: {fileID: 0}
+  m_DebugActionButton5: {fileID: 0}
+  m_DebugActionButton6: {fileID: 0}
+  m_DebugActionButton7: {fileID: 0}
+  m_DebugActionButton8: {fileID: 0}
+  m_DebugActionButton9: {fileID: 0}
+  m_InputField: {fileID: 0}
+  m_InputFieldButton: {fileID: 0}
 --- !u!1 &890138952199854489
 GameObject:
   m_ObjectHideFlags: 0

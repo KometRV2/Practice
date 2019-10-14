@@ -326,7 +326,7 @@ GameObject:
   - component: {fileID: 2425122622684000735}
   - component: {fileID: 4250629568483497590}
   m_Layer: 5
-  m_Name: Scroll View
+  m_Name: ScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -894,7 +894,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 470212861091430401}
   m_HandleRect: {fileID: 3764352770623360676}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2168,17 +2168,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7758784900940889763}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e63149eb842442d2b200a9bbbed183b, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ba3684b47b0f43bc84190309efe65bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ResetButton: {fileID: 2411270243198509672}
-  m_LogNormalButton: {fileID: 87503173524586310}
-  m_LogWarningButton: {fileID: 6160267952237930147}
-  m_LogErrorButton: {fileID: 6451154515237692643}
-  m_DetailItemButtonParent: {fileID: 396990733087330219}
-  m_LogDetailText: {fileID: 3028057527922940028}
-  m_LogDetailItemRef: {fileID: 2630605448876505590, guid: b17660484fb944003b2568b4e59a115b,
-    type: 3}
 --- !u!1 &8972843576470019271
 GameObject:
   m_ObjectHideFlags: 0

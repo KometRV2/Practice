@@ -294,7 +294,7 @@ GameObject:
   - component: {fileID: 1615003154554813254}
   - component: {fileID: 1051525731119730605}
   m_Layer: 5
-  m_Name: Scroll View
+  m_Name: ScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -792,13 +792,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5154494934941971441}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6b0cb7afc59946af9cc283975d57574, type: 3}
+  m_Script: {fileID: 11500000, guid: 84f6989ae08734b12b7df91ee85c502c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ContentsButtonRoot: {fileID: 7123641951894481022}
-  m_ContentsPageRoot: {fileID: 3833278049829965304}
-  m_DebugContentsButtonRef: {fileID: 5233970388524290598, guid: 31297041782f64d5c80cdba601aa678c,
-    type: 3}
 --- !u!1 &7098118137970642163
 GameObject:
   m_ObjectHideFlags: 0

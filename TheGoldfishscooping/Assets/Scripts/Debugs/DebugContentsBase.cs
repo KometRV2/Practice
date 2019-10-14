@@ -18,6 +18,7 @@ public class DebugContentsBase : MonoBehaviour
     public static DebugContentsBase CreateDebugContentsPage(string prefabPath, string titleName, Transform parent)
     {
         DebugContentsBase contentsBase = ResourceManager.CreateObject<DebugContentsBase>(prefabPath, parent);
+        contentsBase.transform.localPosition = Constants.VECTOR3_ZERO;
         contentsBase.Initialize();
         Text titleText = contentsBase.transform.Find("TitleText").GetComponent<Text>();
         titleText.text = titleName;

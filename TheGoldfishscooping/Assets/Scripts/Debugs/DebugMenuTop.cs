@@ -5,18 +5,19 @@ using UnityEngine.UI;
 
 public class DebugMenuTop : DebugContentsBase
 {
-    [SerializeField]
     private RectTransform m_ContentsButtonRoot;
     
-    [SerializeField]
     private RectTransform m_ContentsPageRoot;
 
-    [SerializeField]
     private GameObject m_DebugContentsButtonRef;
 
     public override void Initialize()
     {
         base.Initialize();
+        m_ContentsButtonRoot = this.transform.Find("ScrollView/Viewport/Content").GetComponent<RectTransform>();
+        m_ContentsPageRoot = this.transform.Find("ContentsPageRoot").GetComponent<RectTransform>();
+        m_DebugContentsButtonRef = ResourceManager.LoadObject("Debug/DebugContentsButton");
+
         CreateContentsButton("ログ表示", "Prefabs/Debug/DebugLogPage");
         CreateContentsButton("システム表示", "Prefabs/Debug/DebugSystemPage");
         CreateContentsButton("デバッグアクション表示", "Prefabs/Debug/DebugActionPage");

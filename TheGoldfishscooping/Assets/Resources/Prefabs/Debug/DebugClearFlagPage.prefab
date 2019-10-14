@@ -50,11 +50,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1242291672742850861}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad2a874b6cc44b8783f4a31e9ae5399, type: 3}
+  m_Script: {fileID: 11500000, guid: adef8964ec4aa466781d6ac3d387de9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ClearResetButton: {fileID: 1942992077701243403}
-  m_AllClearButton: {fileID: 8910340936955556040}
+  m_ClearResetButton: {fileID: 0}
+  m_AllClearButton: {fileID: 0}
 --- !u!1 &1982004506946401629
 GameObject:
   m_ObjectHideFlags: 0
